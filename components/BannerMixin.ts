@@ -38,8 +38,5 @@ export default {
     savePreference ({storeCode}) {
       localStorage.setItem('savedLocale', storeCode)
     }
-  },
-  mounted () {
-    console.log('this router', this.$router)
   }
 }
