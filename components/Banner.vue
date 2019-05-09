@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import BannerMixin from 'src/modules/store-picker/components/BannerMixin'
+import BannerMixin from './BannerMixin'
 export default {
   mixins: [BannerMixin]
 }

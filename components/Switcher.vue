@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import SwitcherMixin from 'src/modules/store-picker/components/SwitcherMixin'
+import SwitcherMixin from './SwitcherMixin'
 export default {
   mixins: [SwitcherMixin],
   methods: {
