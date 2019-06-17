@@ -1,8 +1,9 @@
-import store from '@vue-storefront/core/store'
-import { isServer } from '@vue-storefront/core/helpers'
 import { mapGetters } from 'vuex'
+import Mixin from './SharedMixin'
 
 export default {
+  name: 'BannerMixin',
+  mixins: [Mixin],
   data () {
     return {
       closed: false
@@ -10,8 +11,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      current: 'store-picker/currentStoreView',
-      storeViews: 'store-picker/storeViews',
       isCurrent: 'store-picker/isCurrent',
       saved: 'store-picker/saved',
       suggested: 'store-picker/suggested'
@@ -28,15 +27,11 @@ export default {
   },
   methods: {
     goToSuggested () {
-      this.savePreference(this.suggested)
-      window.location = this.suggested.url
+      this.goTo(this.suggested)
     },
     close () {
       this.closed = true
       this.savePreference(this.current)
-    },
-    savePreference ({storeCode}) {
-      localStorage.setItem('savedLocale', storeCode)
     }
   }
 }
