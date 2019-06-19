@@ -2,6 +2,7 @@ import store from '@vue-storefront/core/store'
 import { isServer } from '@vue-storefront/core/helpers'
 import { mapGetters } from 'vuex'
 import { localizedRoute, removeStoreCodeFromRoute } from '@vue-storefront/core/lib/multistore'
+import get from 'lodash.get'
 
 export default {
   name: 'StorePickerMixin',
@@ -12,10 +13,17 @@ export default {
     })
   },
   methods: {
-    getUrl (view) {
-      const url = removeStoreCodeFromRoute(window.location.pathname)
+    getUrl (view): string {
+      if (isServer) {
+        return ''
+      }
+      const pathname = get(window, 'location.pathname', '')
+      let url = removeStoreCodeFromRoute(pathname)
+      if (url === pathname) {
+        url = '/'
+      }
       const route = localizedRoute(url, view.storeCode)
-      return route
+      return route.replace(/\/$/, "")
     },
     goTo (view) {
       const route = this.getUrl(view)
