@@ -6,6 +6,8 @@ export const KEY = 'store-picker'
 
 export const cacheStorage = initCacheStorage(KEY)
 
+export { forceStorecode } from './forceStorecode'
+
 const moduleConfig: VueStorefrontModuleConfig = {
   key: KEY,
   store: { modules: [{ key: KEY, module }] }
