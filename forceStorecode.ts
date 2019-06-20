@@ -3,12 +3,13 @@ import store from '@vue-storefront/core/store'
 import { isServer } from '@vue-storefront/core/helpers'
 import Vue from 'vue'
 
+// Use with https://github.com/kodbruket/vsf-mapping-fallback
 export const forceStorecode = async (context, { url }) => {
   if (isServer) {
     const { storeViews } = store.state.config
     const storeCode = storeCodeFromRoute(url)
     if (storeViews.multistore && storeViews.forcePrefix && !storeCode) {
-      const createUrl = _storeCode => `/${_storeCode}/${url}`
+      const createUrl = (_storeCode: string) => `/${_storeCode}/${url}`
       const { request: req, response: res } = Vue.prototype.$ssrRequestContext.server
       const cfCountry = req.headers.http_cf_ipcountry
       // cfCountry matches existing storeView code...
@@ -27,7 +28,8 @@ export const forceStorecode = async (context, { url }) => {
         return res.redirect(newUrl)
       }
       // ...we have nothing to go on. Just pick any available storeview.
-      const lastResort: any = Object.values(storeViews).find((view: any) => view && view.storeCode)
+      const lastResort: any = Object.values(storeViews)
+        .find((view: any) => view && view.storeCode && !view.disabled)
       const newUrl = createUrl(lastResort.storeCode)
       return res.redirect(newUrl)
     }
