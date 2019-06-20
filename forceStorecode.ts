@@ -3,6 +3,7 @@ import store from '@vue-storefront/core/store'
 import { isServer } from '@vue-storefront/core/helpers'
 import Vue from 'vue'
 
+// Use with https://github.com/kodbruket/vsf-mapping-fallback
 export const forceStorecode = async (context, { url }) => {
   if (isServer) {
     const { storeViews } = store.state.config
