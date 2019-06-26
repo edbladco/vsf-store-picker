@@ -11,7 +11,7 @@ export const forceStorecode = async (context, { url }) => {
     if (storeViews.multistore && storeViews.forcePrefix && !storeCode) {
       const createUrl = (_storeCode: string) => `/${_storeCode}/${url}`
       const { request: req, response: res } = Vue.prototype.$ssrRequestContext.server
-      const cfCountry = req.headers.http_cf_ipcountry.toLowerCase()
+      const cfCountry = req.headers.http_cf_ipcountry ? req.headers.http_cf_ipcountry.toLowerCase() : undefined
       // cfCountry matches existing storeView code...
       if (cfCountry && storeViews[cfCountry]) {
         const newUrl = createUrl(cfCountry)
