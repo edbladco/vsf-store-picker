@@ -7,6 +7,7 @@ export const KEY = 'store-picker'
 export const cacheStorage = initCacheStorage(KEY)
 
 export { forceStorecode } from './forceStorecode'
+export { findCategoryByPath } from './findCategoryByPath'
 
 const moduleConfig: VueStorefrontModuleConfig = {
   key: KEY,
