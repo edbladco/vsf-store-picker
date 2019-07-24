@@ -22,15 +22,17 @@ export const findCategoryByPath = async (context, { url }) => {
       mode: 'cors'
     })
     const {result} = await response.json()
-    if (result.url_paths[storeCode]) {
+    const categorySlug = result.url_paths && result.url_paths[storeCode]
+    if (categorySlug) {
       if (isServer) {
+        const path = `/${storeCode}/${categorySlug}`
         const { response: res } = Vue.prototype.$ssrRequestContext.server
-        return res.redirect(`/${storeCode}/${result.url_paths[storeCode]}`)
+        return res.redirect(path)
       } else {
         return {
           name: 'category',
           params: {
-            slug: result.url_paths[storeCode]
+            slug: categorySlug
           }
         }
       }
