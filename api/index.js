@@ -39,7 +39,9 @@ module.exports = ({ config, db }) => {
         const url_paths = {}
         result.hits.hits.forEach(hit => {
           const storeView = storeViews.find(storeView => hit._index === storeView.elasticsearch.index)
-          url_paths[storeView.key] = hit._source.url_path
+          if (storeView) {
+            url_paths[storeView.key] = hit._source.url_path
+          }
         })
         apiStatus(res, { url_paths });
       })
