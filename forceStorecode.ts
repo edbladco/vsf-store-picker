@@ -6,11 +6,14 @@ import Vue from 'vue'
 // Use with https://github.com/kodbruket/vsf-mapping-fallback
 export const forceStorecode = async (context, { url }) => {
   if (isServer) {
+    const { request: req, response: res } = Vue.prototype.$ssrRequestContext.server
+    if (url.startsWith('dist/')) {
+      return res.status(404).send('Not found')
+    }
     const { storeViews } = store.state.config
     const storeCode = storeCodeFromRoute(url)
     if (storeViews.multistore && storeViews.forcePrefix && !storeCode) {
       const createUrl = (_storeCode: string) => `/${_storeCode}/${url}`
-      const { request: req, response: res } = Vue.prototype.$ssrRequestContext.server
       const cfCountry = req.headers.http_cf_ipcountry ? req.headers.http_cf_ipcountry.toLowerCase() : undefined
       // cfCountry matches existing storeView code...
       if (cfCountry && storeViews[cfCountry]) {
