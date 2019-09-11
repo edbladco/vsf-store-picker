@@ -16,7 +16,7 @@ export const forceStorecode = async (context, { url }) => {
       const createUrl = (_storeCode: string) => `/${_storeCode}/${url}`
       const cfCountry = req.headers.http_cf_ipcountry ? req.headers.http_cf_ipcountry.toLowerCase() : undefined
       // cfCountry matches existing storeView code...
-      if (cfCountry && storeViews[cfCountry]) {
+      if (cfCountry && storeViews[cfCountry] && storeViews[cfCountry].disabled !== true) {
         const newUrl = createUrl(cfCountry)
         return res.redirect(newUrl)
       }
