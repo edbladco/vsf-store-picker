@@ -1,7 +1,8 @@
 import store from '@vue-storefront/core/store'
 import { isServer } from '@vue-storefront/core/helpers'
 import { mapGetters } from 'vuex'
-import { localizedRoute, removeStoreCodeFromRoute, storeCodeFromRoute } from '@vue-storefront/core/lib/multistore'
+import { localizedRoute, removeStoreCodeFromRoute } from '@vue-storefront/core/lib/multistore'
+import storeCodeFromRoute from '@vue-storefront/core/lib/storeCodeFromRoute'
 import get from 'lodash.get'
 import StoryblokMixin from 'src/modules/vsf-storyblok-module/components/StoryblokMixin'
 

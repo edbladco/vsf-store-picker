@@ -1,4 +1,5 @@
-import { storeCodeFromRoute, removeStoreCodeFromRoute } from '@vue-storefront/core/lib/multistore'
+import { removeStoreCodeFromRoute } from '@vue-storefront/core/lib/multistore'
+import storeCodeFromRoute from '@vue-storefront/core/lib/storeCodeFromRoute'
 import store from '@vue-storefront/core/store'
 import { isServer } from '@vue-storefront/core/helpers'
 import Vue from 'vue'
