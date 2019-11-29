@@ -2,6 +2,7 @@ import { Module } from 'vuex'
 import store from '@vue-storefront/core/store'
 import RootState from '@vue-storefront/core/types/RootState'
 import { isServer } from '@vue-storefront/core/helpers'
+import filter from 'lodash-es/filter'
 
 export const module: Module<any, RootState> = {
   namespaced: true,
@@ -11,9 +12,7 @@ export const module: Module<any, RootState> = {
     },
     storeViews: () => {
       const { config } = store.state
-      const stores = config.storeViews.mapStoreUrlsFor
-      const { storeViews } = config
-      return stores.map(store => storeViews[store])
+      return filter(config.storeViews, prop => prop.hasOwnProperty('storeCode') && prop.disabled === false)
     },
     isCurrent: (state, getters) => {
       if (isServer) {
