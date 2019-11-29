@@ -10,6 +10,9 @@ export const forceStorecode = async (context, { url }) => {
     if (url.startsWith('dist/')) {
       return res.status(404).send('Not found')
     }
+    if (req.headers['x-vs-store-code']) {
+      return
+    }
     const { storeViews } = store.state.config
     const storeCode = storeCodeFromRoute(url)
     if (storeViews.multistore && storeViews.forcePrefix && !storeCode) {
