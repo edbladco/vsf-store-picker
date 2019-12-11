@@ -5,6 +5,7 @@ import Vue from 'vue'
 
 // Use with https://github.com/kodbruket/vsf-mapping-fallback
 export const forceStorecode = async (context, { url }) => {
+
   if (isServer) {
     const { request: req, response: res } = Vue.prototype.$ssrRequestContext.server
     if (url.startsWith('dist/')) {
@@ -15,33 +16,46 @@ export const forceStorecode = async (context, { url }) => {
     }
     const { storeViews } = store.state.config
     const storeCode = storeCodeFromRoute(url)
+    const queryString = Object.keys(req.query).map(key => key + '=' + req.query[key]).join('&');
     if (storeViews.multistore && storeViews.forcePrefix && !storeCode) {
       const redirect = url => {
         const statusCode = storeViews.redirectStatusCode || 302
-        res.set('location', url);
+        res.set('location', url)
         res.status(statusCode).send()
       }
       const createUrl = (_storeCode: string) => `/${_storeCode}/${url}`
       const cfCountry = req.headers.http_cf_ipcountry ? req.headers.http_cf_ipcountry.toLowerCase() : undefined
       // cfCountry matches existing storeView code...
       if (cfCountry && storeViews[cfCountry] && storeViews[cfCountry].disabled !== true) {
-        const newUrl = createUrl(cfCountry)
+        let newUrl = createUrl(cfCountry)
+        if (queryString) {
+          newUrl = newUrl + '?' + queryString
+        }
         return redirect(newUrl)
       }
       // ...otherwise check if cfCountry is mapped to a specific storeView...
       if (cfCountry && storeViews.countryStoreViewMapping && storeViews.countryStoreViewMapping[cfCountry]){
-        const newUrl = createUrl(storeViews.countryStoreViewMapping[cfCountry])
+        let newUrl = createUrl(storeViews.countryStoreViewMapping[cfCountry])
+        if (queryString) {
+          newUrl = newUrl + '?' + queryString
+        }
         return redirect(newUrl)
       }
       // ...otherwise check if a single fallback storeview is configured (ie our default storeView)
       if (storeViews.fallbackStoreCode) {
-        const newUrl = createUrl(storeViews.fallbackStoreCode)
+        let newUrl = createUrl(storeViews.fallbackStoreCode)
+        if (queryString) {
+          newUrl = newUrl + '?' + queryString
+        }
         return redirect(newUrl)
       }
       // ...we have nothing to go on. Just pick any available storeview.
       const lastResort: any = Object.values(storeViews)
         .find((view: any) => view && view.storeCode && !view.disabled)
-      const newUrl = createUrl(lastResort.storeCode)
+      let newUrl = createUrl(lastResort.storeCode)
+      if (queryString) {
+        newUrl = newUrl + '?' + queryString
+      }
       return redirect(newUrl)
     }
   }
