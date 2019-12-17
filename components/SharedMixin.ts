@@ -5,6 +5,7 @@ import { localizedRoute, removeStoreCodeFromRoute } from '@vue-storefront/core/l
 import storeCodeFromRoute from '@vue-storefront/core/lib/storeCodeFromRoute'
 import get from 'lodash.get'
 import StoryblokMixin from 'src/modules/vsf-storyblok-module/components/StoryblokMixin'
+import config from 'config'
 
 export default {
   name: 'StorePickerMixin',
@@ -37,8 +38,18 @@ export default {
         }
       }
 
-      const route = localizedRoute(url, view.storeCode)
-      return route.replace(/\/$/, "")
+      return this.localizedRoute(url, view).replace(/\/$/, "")
+    },
+    localizedRoute(url, view) {
+      if (config.baseTld) {
+        if (view.tld) {
+          return view.tld + url
+        } else {
+          return config.baseTld + localizedRoute(url, view.storeCode)
+        }
+      } else {
+        return localizedRoute(url, view.storeCode)
+      }
     },
     goTo (view) {
       const route = this.getUrl(view)
