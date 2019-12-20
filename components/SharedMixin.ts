@@ -23,6 +23,9 @@ export default {
       }
       const pathname = get(window, 'location.pathname', '')
       let url = removeStoreCodeFromRoute(pathname)
+      if (url === '/' + this.current.storeCode) {
+        url = '/'
+      }
 
       // Are we on a Storyblok CMS page?
       if(this.story){
