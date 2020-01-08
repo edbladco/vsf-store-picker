@@ -31,7 +31,7 @@ export default {
       if(this.story){
         // Try to find an alternate story for the target storeview
         let alternateStory = this.story.alternates.find((alternate) => {
-          return storeCodeFromRoute(alternate.full_slug) === view.storeCode
+          return storeCodeFromRoute(alternate.full_slug) === view.storeCode && !alternate.full_slug.endsWith('/home')
         })
         if(alternateStory){
           url = '/' + removeStoreCodeFromRoute(alternateStory.full_slug)
