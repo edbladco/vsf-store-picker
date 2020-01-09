@@ -38,7 +38,7 @@ module.exports = ({ config, db }) => {
           }))
         const url_paths = {}
         result.hits.hits.forEach(hit => {
-          const storeView = storeViews.find(storeView => hit._index.startsWith(storeView.elasticsearch.index))
+          const storeView = storeViews.find(storeView => hit._index === storeView.elasticsearch.index || hit._index.startsWith(storeView.elasticsearch.index + '_'))
           if (storeView) {
             url_paths[storeView.key] = hit._source.url_path
           }
