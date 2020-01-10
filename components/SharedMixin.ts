@@ -2,7 +2,6 @@ import store from '@vue-storefront/core/store'
 import { isServer } from '@vue-storefront/core/helpers'
 import { mapGetters } from 'vuex'
 import { localizedRoute, removeStoreCodeFromRoute } from '@vue-storefront/core/lib/multistore'
-import storeCodeFromRoute from '@vue-storefront/core/lib/storeCodeFromRoute'
 import get from 'lodash.get'
 import StoryblokMixin from 'src/modules/vsf-storyblok-module/components/StoryblokMixin'
 import config from 'config'
@@ -23,15 +22,18 @@ export default {
       }
       const pathname = get(window, 'location.pathname', '')
       let url = removeStoreCodeFromRoute(pathname)
+      if (url === '/' + this.current.storeCode) {
+        url = '/'
+      }
 
       // Are we on a Storyblok CMS page?
-      if(this.story){
+      if(this.story && !this.story.full_slug.endsWith('/home')){
         // Try to find an alternate story for the target storeview
         let alternateStory = this.story.alternates.find((alternate) => {
-          return storeCodeFromRoute(alternate.full_slug) === view.storeCode
+          return alternate.full_slug.startsWith(view.storeCode + '/')
         })
         if(alternateStory){
-          url = '/' + removeStoreCodeFromRoute(alternateStory.full_slug)
+          url = '/' + this.removeStoreCodeFromSlug(alternateStory.full_slug)
         }
       }
 
@@ -47,6 +49,9 @@ export default {
       } else {
         return localizedRoute(url, view.storeCode)
       }
+    },
+    removeStoreCodeFromSlug(slug) {
+      return slug.split(/\/(.+)/)[1]
     },
     goTo (view) {
       const route = this.getUrl(view)
