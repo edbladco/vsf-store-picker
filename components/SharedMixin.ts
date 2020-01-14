@@ -1,4 +1,3 @@
-import store from '@vue-storefront/core/store'
 import { isServer } from '@vue-storefront/core/helpers'
 import { mapGetters } from 'vuex'
 import { localizedRoute, removeStoreCodeFromRoute } from '@vue-storefront/core/lib/multistore'
