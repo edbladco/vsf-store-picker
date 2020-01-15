@@ -14,8 +14,13 @@ import fetch from 'isomorphic-fetch'
  */
 export const findCategoryByPath = async (context, { url }) => {
   const {config} = store.state
-  const { request: req } = Vue.prototype.$ssrRequestContext.server
-  const storeCode = req.header('x-vs-store-code') ? req.header('x-vs-store-code') : storeCodeFromRoute(url)
+  let storeCode = storeCodeFromRoute(url)
+  if (isServer) {
+    const { request: req } = Vue.prototype.$ssrRequestContext.server
+    if (req.header('x-vs-store-code')) {
+      storeCode = req.header('x-vs-store-code')
+    }
+  }
   const category = (removeStoreCodeFromRoute(url) as string)
   if (category && config.storeViews.multistore && config.storePicker && config.storePicker.categoryByPath) {
     const categoryUrl = config.storePicker.categoryByPath.replace('{{path}}', category)
@@ -27,9 +32,9 @@ export const findCategoryByPath = async (context, { url }) => {
     const categorySlug = result.url_paths && result.url_paths[storeCode]
     if (categorySlug) {
       if (isServer) {
+        const { request: req, response: res } = Vue.prototype.$ssrRequestContext.server
         const path = req.headers['x-vs-store-code'] ? `/${categorySlug}` : `/${storeCode}/${categorySlug}`
-        const { response: res } = Vue.prototype.$ssrRequestContext.server
-        return res.redirect(path)
+        return res.set('location', path).status(301).send()
       } else {
         return {
           name: 'category',
