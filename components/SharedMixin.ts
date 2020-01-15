@@ -40,11 +40,11 @@ export default {
       return this.localizedRoute(url, view).replace(/\/$/, "")
     },
     localizedRoute(url, view) {
-      if (config.baseTld) {
-        if (view.tld) {
-          return view.tld + url
+      if (config.baseUrl) {
+        if (this.isAbsoluteUrl(view.url)) {
+          return view.url + url
         } else {
-          return config.baseTld + localizedRoute(url, view.storeCode)
+          return config.baseUrl + localizedRoute(url, view.storeCode)
         }
       } else {
         return localizedRoute(url, view.storeCode)
@@ -60,6 +60,9 @@ export default {
     },
     savePreference ({storeCode}) {
       localStorage.setItem('savedLocale', storeCode)
+    },
+    isAbsoluteUrl (url) {
+      return /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(url)
     }
   }
 }
