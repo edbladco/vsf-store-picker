@@ -21,7 +21,7 @@ export const findCategoryByPath = async (context, { url }) => {
       storeCode = req.header('x-vs-store-code')
     }
   }
-  const category = (removeStoreCodeFromRoute(url) as string)
+  const category = (removeStoreCodeFromRoute(url) as string).replace(/\/?(\?.*)?$/, "") // remove trailing slash and/or qs variables if present
   if (category && config.storeViews.multistore && config.storePicker && config.storePicker.categoryByPath) {
     const categoryUrl = config.storePicker.categoryByPath.replace('{{path}}', category)
     const response = await fetch(categoryUrl, {
