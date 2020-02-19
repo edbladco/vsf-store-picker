@@ -5,10 +5,11 @@ import { localizedRoute, removeStoreCodeFromRoute } from '@vue-storefront/core/l
 import get from 'lodash.get'
 import StoryblokMixin from 'src/modules/vsf-storyblok-module/components/StoryblokMixin'
 import config from 'config'
+import CurrentPageMixin from './CurrentPageMixin'
 
 export default {
   name: 'StorePickerMixin',
-  mixins: [StoryblokMixin],
+  mixins: [StoryblokMixin, CurrentPageMixin],
   computed: {
     ...mapGetters({
       current: 'store-picker/currentStoreView',
@@ -27,7 +28,13 @@ export default {
       }
 
       // Are we on a Storyblok CMS page?
-      if(this.story && !this.story.full_slug.endsWith('/home')){
+      if (this.isProductPage) {
+        return this.localizedRoute(url, view).replace(/\/$/, "") + '?posterpage'
+      }
+      else if (this.isCategoryPage) {
+        return this.localizedRoute(url, view).replace(/\/$/, "") + '?categorypage'
+      }
+      else if (this.isStoryblokPage && !this.story.full_slug.endsWith('/home')){
         // Try to find an alternate story for the target storeview
         let alternateStory = this.story.alternates.find((alternate) => {
           return alternate.full_slug.startsWith(view.storeCode + '/')
