@@ -1,5 +1,6 @@
 import { apiStatus } from '../../../lib/util';
 import { Router } from 'express';
+import { getClient } from '../../../lib/elastic'
 
 const createQuery = (index, term) => ({
   index,
@@ -15,8 +16,9 @@ const createQuery = (index, term) => ({
   }
 })
 
-module.exports = ({ config, db }) => {
+module.exports = ({ config }) => {
   const api = Router();
+  const db = getClient(config)
   const index = config.elasticsearch.indices.join(',')
 
   api.get('/categoryByPath', (req, res) => {
