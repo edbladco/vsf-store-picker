@@ -16,6 +16,14 @@ const createQuery = (index, term) => ({
   }
 })
 
+const getHits = function (result) {
+  if (result.body) { // differences between ES5 andd ES7
+    return result.body.hits
+  } else {
+    return result.hits
+  }
+}
+
 module.exports = ({ config }) => {
   const api = Router();
   const db = getClient(config)
@@ -24,11 +32,12 @@ module.exports = ({ config }) => {
   api.get('/categoryByPath', (req, res) => {
     const { path: url_path } = req.query;
     db.search(createQuery(index, { url_path })).then(result => {
-      if (result.hits.total === 0) {
+      const hits = getHits(result)
+      if (hits.total === 0) {
         apiStatus(res, 'No result')
         return
       }
-      const _id = result.hits.hits[0]._id
+      const _id = hits.hits[0]._id
       db.search(createQuery(index, { _id })).then(result => {
         const storeViews = Object.entries(config.storeViews)
           .filter(([key, indice]) =>
@@ -39,7 +48,8 @@ module.exports = ({ config }) => {
             key
           }))
         const url_paths = {}
-        result.hits.hits.forEach(hit => {
+        const hits = getHits(result)
+        hits.hits.forEach(hit => {
           const storeView = storeViews.find(storeView => hit._index === storeView.elasticsearch.index || hit._index.startsWith(storeView.elasticsearch.index + '_'))
           if (storeView) {
             url_paths[storeView.key] = hit._source.url_path
