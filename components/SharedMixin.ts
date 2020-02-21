@@ -6,6 +6,7 @@ import get from 'lodash.get'
 import StoryblokMixin from 'src/modules/vsf-storyblok-module/components/StoryblokMixin'
 import config from 'config'
 import CurrentPageMixin from './CurrentPageMixin'
+import { findCategoryByPath } from '../findCategoryByPath'
 
 export default {
   name: 'StorePickerMixin',

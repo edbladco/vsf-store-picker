@@ -4,29 +4,26 @@ import { RouterManager } from '@vue-storefront/core/lib/router-manager'
 export default {
   data () {
     return {
-      currentRouteComponent: null
+      currentRouteComponentName: null
     }
   },
   watch: {
-    '$route.name': function () {
+    '$route': function () {
       this.setCurrentPage()
     }
   },
   computed: {
-    canGoBack () {
-      return !this.isHistoryEmpty() && this.isProductPage
-    },
     isProductPage () {
-      return this.currentRouteComponent == 'Product'
+      return this.currentRouteComponentName == 'Product'
     },
     isCategoryPage () {
-      return this.currentRouteComponent == 'Category'
+      return this.currentRouteComponentName == 'Category'
     },
     isStoryblokPage () {
-      return this.currentRouteComponent == 'StoryblokPage'
+      return this.currentRouteComponentName == 'StoryblokPage'
     },
     isCheckoutPage () {
-      return this.currentRouteComponent == 'Checkout'
+      return this.currentRouteComponentName == 'Checkout'
     },
   },
   created () {
@@ -35,15 +32,8 @@ export default {
   methods: {
     setCurrentPage () {
       const route = RouterManager.findByName(this.$route.name)
-      this.currentRouteComponent = route && route.component && route.component.name
-    },
-    // Check if history is empty
-    isHistoryEmpty () {
-      if (!isServer) {
-        return window.history.length <= 1
-      }
-
-      return false
+      console.log({pageType: route.component.name})
+      this.currentRouteComponentName = route && route.component && route.component.name
     }
   }
 }
