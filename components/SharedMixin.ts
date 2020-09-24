@@ -26,12 +26,12 @@ export default {
       }
 
       // Are we on a Storyblok CMS page?
-      if(this.story && !this.story.full_slug.endsWith('/home')){
+      if (this.story && this.story.full_slug && !this.story.full_slug.endsWith('/home')) {
         // Try to find an alternate story for the target storeview
         let alternateStory = this.story.alternates.find((alternate) => {
           return alternate.full_slug.startsWith(view.storeCode + '/')
         })
-        if(alternateStory){
+        if (alternateStory) {
           url = '/' + this.removeStoreCodeFromSlug(alternateStory.full_slug)
         }
       }
